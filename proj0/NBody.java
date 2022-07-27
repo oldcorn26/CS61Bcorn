@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class NBody {
-    public static String Background = "images/starfield.jpg";
+    private static String Background = "images/starfield.jpg";
     public static double readRadius(String s){
         In in = new In(s);
         int num = in.readInt();
