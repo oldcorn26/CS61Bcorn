@@ -1,8 +1,14 @@
+/**A list program.*/
 public class ArrayDeque<T> {
+    /**A constant.*/
     private T[] items;
+    /**A constant.*/
     private int size;
+    /**A constant.*/
     private int first;
+    /**A constant.*/
     private int last;
+    /**A constant.*/
     private int max;
 
     /** Creates an empty list.*/
@@ -18,23 +24,25 @@ public class ArrayDeque<T> {
      * @param num is the size of the new list.
      */
     private void resize(int num) {
-        if (num <= 8) {
+        if (num < 8) {
             return;
         }
         T[] newArray = (T[]) new Object[num];
         if (first < last) {
             System.arraycopy(items, 0, newArray, 0, first);
-            System.arraycopy(items, last, newArray, num - max + last, max - last - 1);
+            System.arraycopy(items, last + 1, newArray,
+                    num - max + last + 1, max - last - 1);
             last = num - max + last;
             max = num;
         } else {
             for (int i = 0; i < size; i++) {
                 newArray[i] = items[first - i - 1];
             }
-            first = size - 1;
+            first = size;
             max = num;
             last = num - 1;
         }
+        items = newArray;
     }
 
     /** Add an item to the first of the list.
@@ -66,9 +74,6 @@ public class ArrayDeque<T> {
         if (size + 2 >= max) {
             this.resize(max * 2);
         }
-        items[last] = item;
-        last --;
-        size ++;
         if (first < last) {
             items[last] = item;
             last--;
@@ -100,17 +105,29 @@ public class ArrayDeque<T> {
         if (first < last) {
             int x = first;
             int y = max - 1;
+            int i = 0;
             while (x > 0) {
-                System.out.println(items[x]);
+                System.out.print(items[x - 1]);
+                if (i + 1 < size) {
+                    System.out.print(' ');
+                    i++;
+                }
                 x--;
             }
             while (y > last) {
-                System.out.println(items[y]);
+                System.out.print(items[y]);
+                if (i + 1 < size) {
+                    System.out.print(' ');
+                    i++;
+                }
                 y--;
             }
         } else {
             for (int i = 0; i < size; i++) {
-                System.out.println(items[first - i - 1]);
+                System.out.print(items[first - i - 1]);
+                if (i + 1 < size) {
+                    System.out.print(' ');
+                }
             }
         }
     }
@@ -163,33 +180,6 @@ public class ArrayDeque<T> {
             return items[max - 1 - index + first];
         } else {
             return items[first - index - 1];
-        }
-    }
-
-    /** Return the index one's item.
-     * @param index is where the item we want belongs to
-     * Use recursion*/
-    public T getRecursive(int index) {
-        if (index + 1 > size || index < 0) {
-            return null;
-        }
-        int temp_global = first;
-        return getRecursiveHelper(temp_global, index);
-    }
-
-    /** The helper program of getRecursion
-     * @param head is the first sentinel of a list
-     * @param index is where the item we want belongs to
-     * @return the item we want
-     */
-    private T getRecursiveHelper(int head, int index) {
-        if (index == 0) {
-            if (head == 0) return items[max - 1];
-            else return items[head - 1];
-        } else if (head == 0) {
-            return getRecursiveHelper(max - 1, index - 1);
-        } else {
-            return getRecursiveHelper(head - 1, index - 1);
         }
     }
 }

@@ -1,13 +1,24 @@
+/**A list program.*/
 public class LinkedListDeque<T> {
+    /**A constant.*/
     private Node sentinel;
+    /**A constant.*/
     private Node temp_global;
+    /**A constant.*/
     private int size = 0;
 
-    public class Node {
+    /**A node class.*/
+    private class Node {
+        /**A constant.*/
         public T attr;
+        /**A constant.*/
         public Node pre;
+        /**A constant.*/
         public Node next;
 
+        /**A node class.
+         * @param item is the number
+         */
         public Node(T item) {
             this.attr = item;
             this.pre = null;
@@ -43,14 +54,14 @@ public class LinkedListDeque<T> {
         Node temp;
         Node n = new Node(item);
         temp = sentinel.pre;
-        sentinel.next = n;
+        sentinel.pre = n;
         n.next = sentinel;
         n.pre = temp;
         temp.next = n;
         size++;
     }
 
-    /** Check if it is empty
+    /** Check if it is empty.
      * Return ture if it is empty.*/
     public boolean isEmpty() {
         return size == 0;
@@ -65,9 +76,9 @@ public class LinkedListDeque<T> {
     public void printDeque() {
         Node p = sentinel.next;
         for (int i = 0; i < size; i++) {
-            System.out.println(p.attr);
+            System.out.print(p.attr);
             if (i + 1 < size) {
-                System.out.println(' ');
+                System.out.print(' ');
             }
             p = p.next;
         }
@@ -89,7 +100,7 @@ public class LinkedListDeque<T> {
         return temp.attr;
     }
 
-    /** Remove the last one in the list
+    /** Remove the last one in the list.
      * Return the item of the removed one.*/
     public T removeLast() {
         if (size == 0) {
@@ -131,7 +142,7 @@ public class LinkedListDeque<T> {
         return getRecursiveHelper(temp_global, index);
     }
 
-    /** The helper program of getRecursion
+    /** The helper program of getRecursion.
      * @param head is the first one of a list
      * @param index is where the item we want belongs to
      * @return the item we want
@@ -139,6 +150,8 @@ public class LinkedListDeque<T> {
     private T getRecursiveHelper(Node head, int index) {
         if (index == 0) {
             return head.attr;
-        } else return getRecursiveHelper(head.next, index - 1);
+        } else {
+            return getRecursiveHelper(head.next, index - 1);
+        }
     }
 }
