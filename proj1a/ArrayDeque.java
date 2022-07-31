@@ -36,7 +36,7 @@ public class ArrayDeque<T> {
             max = num;
         } else {
             for (int i = 0; i < size; i++) {
-                newArray[i] = items[first - i - 1];
+                newArray[size - i - 1] = items[first - i - 1];
             }
             first = size;
             max = num;
@@ -182,19 +182,4 @@ public class ArrayDeque<T> {
             return items[first - index - 1];
         }
     }
-
-    public static void main(String[] args) {
-        ArrayDeque<Integer> L = new ArrayDeque();
-        L.addFirst(0);
-        System.out.println(L.removeLast());
-        L.addFirst(2);
-        L.addFirst(3);
-        L.get(0);
-        System.out.println(L.removeLast());
-        System.out.println(L.removeLast());
-        L.addLast(8);
-        System.out.println(L.removeLast());
-        L.printDeque();
-    }
-
 }
