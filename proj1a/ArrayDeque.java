@@ -84,7 +84,7 @@ public class ArrayDeque<T> {
             size++;
         } else {
             items[last] = item;
-            last++;
+            last--;
             size++;
         }
     }
@@ -182,4 +182,19 @@ public class ArrayDeque<T> {
             return items[first - index - 1];
         }
     }
+
+    public static void main(String[] args) {
+        ArrayDeque<Integer> L = new ArrayDeque();
+        L.addFirst(0);
+        System.out.println(L.removeLast());
+        L.addFirst(2);
+        L.addFirst(3);
+        L.get(0);
+        System.out.println(L.removeLast());
+        System.out.println(L.removeLast());
+        L.addLast(8);
+        System.out.println(L.removeLast());
+        L.printDeque();
+    }
+
 }
