@@ -1,50 +1,56 @@
-/**
- * Description: XXX.
- * Author: Corn Liu
- * Email: cornliu@zju.edu.cn
- * Date: 2022/8/4 22:49
- */
-
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TestArrayDequeGold {
-    @Test(timeout = 10000)
-    public void testStudentArray() {
-        StudentArrayDeque<Integer> stu = new StudentArrayDeque<>();
-        ArrayDequeSolution<Integer> exp = new ArrayDequeSolution();
-        int size = 0;
-
-        while(size < 10000) {
-            double numberBetweenZeroAndOne = StdRandom.uniform();
-
-            if (numberBetweenZeroAndOne < 0.25) {
-                int num = (int)(numberBetweenZeroAndOne * 666);
-                stu.addFirst(num);
-                exp.addFirst(num);
-                assertEquals("addFirst(" + num + ")", exp.get(size), stu.get(size));
-//                System.out.println("addFirst(" + num + ")");
-                size++;
-            } else if (numberBetweenZeroAndOne < 0.5 && size > 0) {
-                size--;
-                int removed1 = exp.removeFirst();
-                int removed2 = stu.removeFirst();
-                assertEquals("removeFirst(): " + removed2, removed1, removed2);
-//                System.out.println("removeFirst(): " + removed2);
-            } else if (numberBetweenZeroAndOne < 0.75 && size > 0) {
-                size--;
-                int removed1 = exp.removeLast();
-                int removed2 = stu.removeLast();
-                assertEquals("removeLast(): " + removed2, removed1, removed2);
-//                System.out.println("removeLast(): " + removed2);
+    @Test
+    public void testStudentArrayDeque() {
+        StudentArrayDeque<Integer> testArray = new StudentArrayDeque<>();
+        ArrayDequeSolution<Integer> stdArray = new ArrayDequeSolution<>();
+        String log = "";
+        for (int i = 0; i < 1000; i++) {
+            if (stdArray.size() == 0) {
+                int addNumber = StdRandom.uniform(1000);
+                int headOrBack = StdRandom.uniform(2);
+                if (headOrBack == 0) {
+                    log = log + "addFirst(" + addNumber + ")\n";
+                    testArray.addFirst(addNumber);
+                    stdArray.addFirst(addNumber);
+                } else {
+                    log = log + "addLast(" + addNumber + ")\n";
+                    testArray.addLast(addNumber);
+                    stdArray.addLast(addNumber);
+                }
             } else {
-                int num = (int) (numberBetweenZeroAndOne * 666);
-                stu.addLast(num);
-                exp.addLast(num);
-                assertEquals("addLast(" + num + ")", exp.get(size), stu.get(size));
-//                System.out.println("addLast(" + num + ")");
-                size++;
+                int x = StdRandom.uniform(4);
+                int addNumber = StdRandom.uniform(1000);
+                Integer testremoveNumber = 1;
+                Integer stdremoveNumber = 1;
+                switch (x) {
+                    case 0:
+                        log = log + "addFirst(" + addNumber + ")\n";
+                        testArray.addFirst(addNumber);
+                        stdArray.addFirst(addNumber);
+                        break;
+                    case 1:
+                        log = log + "addLast(" + addNumber + ")\n";
+                        testArray.addLast(addNumber);
+                        stdArray.addLast(addNumber);
+                        break;
+                    case 2:
+                        log = log + "removeFirst()\n";
+                        testremoveNumber = testArray.removeFirst();
+                        stdremoveNumber = stdArray.removeFirst();
+                        break;
+                    case 3:
+                        log = log + "removeLast()\n";
+                        testremoveNumber = testArray.removeLast();
+                        stdremoveNumber = stdArray.removeLast();
+                        break;
+                    default:
+                }
+                assertEquals(log, stdremoveNumber, testremoveNumber);
             }
         }
+
     }
 }
