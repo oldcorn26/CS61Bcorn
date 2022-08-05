@@ -23,26 +23,26 @@ public class TestArrayDequeGold {
                 stu.addFirst(num);
                 exp.addFirst(num);
                 assertEquals("addFirst(" + num + ")", exp.get(size), stu.get(size));
-                System.out.println("addFirst(" + num + ")");
+//                System.out.println("addFirst(" + num + ")");
                 size++;
             } else if (numberBetweenZeroAndOne < 0.5 && size > 0) {
                 size--;
                 int removed1 = exp.removeFirst();
                 int removed2 = stu.removeFirst();
                 assertEquals("removeFirst(): " + removed2, removed1, removed2);
-                System.out.println("removeFirst(): " + removed2);
+//                System.out.println("removeFirst(): " + removed2);
             } else if (numberBetweenZeroAndOne < 0.75 && size > 0) {
                 size--;
                 int removed1 = exp.removeLast();
                 int removed2 = stu.removeLast();
                 assertEquals("removeLast(): " + removed2, removed1, removed2);
-                System.out.println("removeLast(): " + removed2);
+//                System.out.println("removeLast(): " + removed2);
             } else {
                 int num = (int) (numberBetweenZeroAndOne * 666);
                 stu.addLast(num);
                 exp.addLast(num);
                 assertEquals("addLast(" + num + ")", exp.get(size), stu.get(size));
-                System.out.println("addLast(" + num + ")");
+//                System.out.println("addLast(" + num + ")");
                 size++;
             }
         }
