@@ -1,11 +1,9 @@
-// TODO: Make sure to make this class a part of the synthesizer package
-//package <package name>;
+package synthesizer;
+
+//import edu.princeton.cs.introcs.StdAudio;
 
 //Make sure this class is public
 public class GuitarString {
-    /** Constants. Do not change. In case you're curious, the keyword final means
-     * the values cannot be changed at runtime. We'll discuss this and other topics
-     * in lecture on Friday. */
     private static final int SR = 44100;      // Sampling Rate
     private static final double DECAY = .996; // energy decay factor
 
@@ -18,6 +16,12 @@ public class GuitarString {
         //       cast the result of this divsion operation into an int. For better
         //       accuracy, use the Math.round() function before casting.
         //       Your buffer should be initially filled with zeros.
+        int cap = (int) (Math.round(SR / frequency));
+        buffer = new ArrayRingBuffer<Double>(cap);
+        while (cap > 0) {
+            buffer.enqueue(0.0);
+            cap--;
+        }
     }
 
 
@@ -28,7 +32,44 @@ public class GuitarString {
         //       double r = Math.random() - 0.5;
         //
         //       Make sure that your random numbers are different from each other.
+        int cap = buffer.capacity();
+        double [] music = new double[cap];
+        double r;
+        this.clearBuffer();
+        while (cap > 0) {
+            r = Math.random() - 0.5;
+            while(this.checkSame(music, r)){
+              r = Math.random() - 0.5;
+            }
+            buffer.enqueue(r);
+            cap--;
+        }
     }
+
+    /** Clear all the numbers.*/
+    private void clearBuffer() {
+        int num = buffer.fillCount();
+        while (num > 0) {
+            buffer.dequeue();
+            num--;
+        }
+    }
+
+    /** Check if it is same.
+     * @param music is a array
+     * @param checkNum is the number we want to check
+     * @return true if it is true
+     */
+    private boolean checkSame(double[] music, double checkNum) {
+        int num = buffer.fillCount();
+        for (int i = 0; i < num; i++) {
+            if (music[i] == checkNum) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /* Advance the simulation one time step by performing one iteration of
      * the Karplus-Strong algorithm. 
@@ -37,11 +78,14 @@ public class GuitarString {
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
+        double fir = buffer.dequeue();
+        double nxt = buffer.peek();
+        buffer.enqueue(DECAY * (fir + nxt) / 2);
     }
 
     /* Return the double at the front of the buffer. */
     public double sample() {
         // TODO: Return the correct thing.
-        return 0;
+        return buffer.peek();
     }
 }
