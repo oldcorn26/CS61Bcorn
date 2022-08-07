@@ -12,10 +12,6 @@ public class GuitarString {
 
     /* Create a guitar string of the given frequency.  */
     public GuitarString(double frequency) {
-        // TODO: Create a buffer with capacity = SR / frequency. You'll need to
-        //       cast the result of this divsion operation into an int. For better
-        //       accuracy, use the Math.round() function before casting.
-        //       Your buffer should be initially filled with zeros.
         int cap = (int) (Math.round(SR / frequency));
         buffer = new ArrayRingBuffer<Double>(cap);
         while (cap > 0) {
@@ -33,7 +29,7 @@ public class GuitarString {
         this.clearBuffer();
         while (cap > 0) {
             r = Math.random() - 0.5;
-            while(this.checkSame(music, r)) {
+            while (this.checkSame(music, r)) {
                 r = Math.random() - 0.5;
             }
             buffer.enqueue(r);
