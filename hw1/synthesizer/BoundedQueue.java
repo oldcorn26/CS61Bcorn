@@ -1,14 +1,12 @@
 package synthesizer;
 
-import java.util.Iterator;
-
 /**
  * Description: XXX.
  * Author: Corn Liu
  * Email: cornliu@zju.edu.cn
  * Date: 2022/8/6 18:49
  */
-public interface BoundedQueue<T> extends Iterable<T>{
+public interface BoundedQueue<T> extends Iterable<T> {
     int capacity();     // return size of the buffer
     int fillCount();    // return number of items currently in the buffer
     void enqueue(T x);  // add item x to the end
