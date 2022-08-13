@@ -1,8 +1,5 @@
 package byog.Core;
 
-
-import byog.TileEngine.TETile;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,15 +17,15 @@ import java.io.ObjectOutputStream;
 public class Save {
     /**
      * Load a doc
-     * @return the TETile[][]
+     * @return the Game
      */
-    private static TETile[][] loadMap() {
+    public static SaveHelper loadMap() {
         File f = new File("./map.ser");
         if (f.exists()) {
             try {
                 FileInputStream fs = new FileInputStream(f);
                 ObjectInputStream os = new ObjectInputStream(fs);
-                TETile[][] loadMap = (TETile[][]) os.readObject();
+                SaveHelper loadMap = (SaveHelper) os.readObject();
                 os.close();
                 return loadMap;
             } catch (FileNotFoundException e) {
@@ -49,9 +46,9 @@ public class Save {
 
     /**
      * Save the map.
-     * @param r is the TETile[][].
+     * @param g is the Game.
      */
-    private static void saveMap(TETile[][] r) {
+    public static void saveMap(SaveHelper g) {
         File f = new File("./map.ser");
         try {
             if (!f.exists()) {
@@ -59,7 +56,7 @@ public class Save {
             }
             FileOutputStream fs = new FileOutputStream(f);
             ObjectOutputStream os = new ObjectOutputStream(fs);
-            os.writeObject(r);
+            os.writeObject(g);
             os.close();
         }  catch (FileNotFoundException e) {
             System.out.println("file not found");

@@ -8,21 +8,25 @@ import byog.TileEngine.Tileset;
 import java.awt.*;
 import java.util.Random;
 
+import static byog.Core.Save.loadMap;
+import static byog.Core.Save.saveMap;
+
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
     private static final int ROOM_NUMBER = 15;
-    private static Random RANDOM;
-    private static TETile[][] map = new TETile[WIDTH][HEIGHT];
+    public Random RANDOM;
+    public TETile[][] map = new TETile[WIDTH][HEIGHT];
     private static boolean playerTurn;
-    private static boolean readSave;
+    private static boolean saveMode;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+
     }
 
     /**
@@ -45,15 +49,20 @@ public class Game {
         /* Initial sth.*/
         int[] player;
         playerTurn = true;
+        saveMode = false;
+        getSeed(input);
         getRANDOM(getSeed(input));
 
-        /* Randomly create some rooms, hallways.*/
-        Room[] rooms = fillRoomsRandomly();
-        fillHallwaysRandomly(rooms);
-
-        /* Supplement the rest part and move the coordinate of player.*/
-        player = fillOtherPlace(rooms);
+        if (!saveMode) {
+            /* Randomly create the map.*/
+            Room[] rooms = fillRoomsRandomly();
+            fillHallwaysRandomly(rooms);
+            player = fillOtherPlace(rooms);
+        } else {
+            player= getPlayerCoordinate();
+        }
         player = getPlayerCoordinate(input, player);
+        getSaveCommand(input);
 
         /* Draw the map and interact with people.*/
 //        drawMap(player);
@@ -66,13 +75,39 @@ public class Game {
      * @param player is the coordinate of player.
      */
     private void drawMap(int[] player) {
-        ter.initialize(WIDTH, HEIGHT + 1);
-        while (playerTurn) {
-            ter.renderFrame(map);
-            showMapInfo();
-            player = getKeyTyped(player);
+//        ter.initialize(WIDTH, HEIGHT + 1);
+//        while (playerTurn) {
+//            ter.renderFrame(map);
+//            showMapInfo();
+//            player = getKeyTyped(player);
 //            StdDraw.pause(25);
+//        }
+//        StdDraw.clear(new Color(0, 0, 0));
+//        Font bigFont = new Font("Monaco", Font.BOLD, 50);
+//        StdDraw.setFont(bigFont);
+//        StdDraw.setPenColor(Color.white);
+//        StdDraw.text(WIDTH / 2, HEIGHT / 2, "See you!");
+//        StdDraw.show();
+    }
+
+    /** Check if save the map.*/
+    private void getSaveCommand(String input) {
+        int i;
+        if ((i = input.indexOf(':')) != -1){
+            if (input.charAt(i + 1) == 'q' || input.charAt(i + 1) == 'Q') {
+                saveEverything(getSeed(input));
+                playerTurn = false;
+            }
         }
+    }
+
+    /**
+     * Save the map.
+     * @param seed is the random seed.
+     */
+    private void saveEverything(long seed) {
+        SaveHelper temp = new SaveHelper(WIDTH, HEIGHT, map, seed);
+        saveMap(temp);
     }
 
     /**
@@ -88,7 +123,7 @@ public class Game {
                 i++;
             }
             i++;
-        }
+        } else if (input.charAt(0) == 'L' || input.charAt(0) == 'l') {}
         input = input.substring(i);
         for (i = 0; i < input.length(); i++) {
             switch (input.charAt(i)) {
@@ -122,11 +157,30 @@ public class Game {
     }
 
     /**
+     * Rewrite the method to get the coordinate of player.
+     * @return the coordinate of the player.
+     */
+    private int[] getPlayerCoordinate() {
+        int[] result = new int[2];
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                if (map[i][j] == Tileset.PLAYER) {
+                    result[0] = i;
+                    result[1] = j;
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get the key input and move the player.
      * @param player is the coordinate of the player.
      * @return the new coordinate of the player.
      */
     private int[] getKeyTyped(int[] player) {
+        int flag = 0;
 //        if (StdDraw.hasNextKeyTyped()) {
 //            char key = StdDraw.nextKeyTyped();
 //            if (key == 'w' || key == 'W') {
@@ -137,6 +191,12 @@ public class Game {
 //                if (movePlayer('L', player[0], player[1])) {player[0]--;}
 //            } else if (key == 'd' || key == 'D') {
 //                if (movePlayer('R', player[0], player[1])) {player[0]++;}
+//            } else if (key == ':' || key == ';') {
+//                while (StdDraw.isKeyPressed('Q') || StdDraw.isKeyPressed('q') || flag < 100) {
+//                    getSaveCommand(":Q");
+//                    flag++;
+//                    StdDraw.pause(10);
+//                }
 //            }
 //        }
         return player;
@@ -325,9 +385,56 @@ public class Game {
             }
             return Long.parseLong(s);
         } else if (input.charAt(0) == 'L' || input.charAt(0) == 'l') {
+            saveMode = readSave();
             return 0;
         }
         else return 0;
+    }
+
+    /**
+     * Read save.
+     * @return true if read successfully.
+     */
+    private boolean readSave() {
+        SaveHelper temp = loadMap();
+        if (temp == null) {
+            return false;
+        } else {
+            map = decodeSavedMap(temp.saveMap);
+            RANDOM = new Random(temp.saveSeed);
+            return true;
+        }
+    }
+
+    /**
+     * Decode the map.
+     * @param temp is the matrix of the encoded map.
+     * @return the TETile[][].
+     */
+    private TETile[][] decodeSavedMap(int[][] temp) {
+        TETile[][] theMap = new TETile[WIDTH][HEIGHT];
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                switch (temp[i][j]) {
+                    case 0:
+                        theMap[i][j] = Tileset.FLOOR;
+                        break;
+                    case 2:
+                        theMap[i][j] = Tileset.PLAYER;
+                        break;
+                    case 3:
+                        theMap[i][j] = Tileset.WALL;
+                        break;
+                    case 4:
+                        theMap[i][j] = Tileset.LOCKED_DOOR;
+                        break;
+                    default:
+                        theMap[i][j] = Tileset.NOTHING;
+                        break;
+                }
+            }
+        }
+        return theMap;
     }
 
     /**
@@ -491,29 +598,29 @@ public class Game {
                 if (map[i][j] != Tileset.FLOOR) continue;
                 if (map[i - 1][j] == Tileset.WALL && map[i][j - 1] == Tileset.WALL &&
                         map[i + 1][j] != Tileset.WALL && map[i][j + 1] != Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
                 if (map[i - 1][j] != Tileset.WALL && map[i][j - 1] == Tileset.WALL &&
                         map[i + 1][j] == Tileset.WALL && map[i][j + 1] != Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
                 if (map[i - 1][j] != Tileset.WALL && map[i][j - 1] != Tileset.WALL &&
                         map[i + 1][j] == Tileset.WALL && map[i][j + 1] == Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
                 if (map[i - 1][j] == Tileset.WALL && map[i][j - 1] != Tileset.WALL &&
                         map[i + 1][j] != Tileset.WALL && map[i][j + 1] == Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
             }
         }
         for (int i = 0; i < WIDTH - 1; i++) {
             for (int j = 0; j < HEIGHT - 1; j++) {
-                if (map[i][j] == Tileset.FLOWER) map[i][j] = Tileset.WALL;
+                if (map[i][j] == Tileset.FLOWER) {map[i][j] = Tileset.WALL;}
             }
         }
     }
