@@ -56,7 +56,7 @@ public class Game {
         player = getPlayerCoordinate(input, player);
 
         /* Draw the map and interact with people.*/
-        drawMap(player);
+//        drawMap(player);
 
         return map;
     }
