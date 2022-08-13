@@ -20,7 +20,7 @@ public class Save {
      * @return the Game
      */
     public static SaveHelper loadMap() {
-        File f = new File("./map.ser");
+        File f = new File("map.ser");
         if (f.exists()) {
             try {
                 FileInputStream fs = new FileInputStream(f);
@@ -49,7 +49,7 @@ public class Save {
      * @param g is the Game.
      */
     public static void saveMap(SaveHelper g) {
-        File f = new File("./map.ser");
+        File f = new File("map.ser");
         try {
             if (!f.exists()) {
                 f.createNewFile();
