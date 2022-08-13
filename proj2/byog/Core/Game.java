@@ -56,7 +56,7 @@ public class Game {
         player = getPlayerCoordinate(input, player);
 
         /* Draw the map and interact with people.*/
-        drawMap(player);
+//        drawMap(player);
 
         return map;
     }
@@ -491,29 +491,29 @@ public class Game {
                 if (map[i][j] != Tileset.FLOOR) continue;
                 if (map[i - 1][j] == Tileset.WALL && map[i][j - 1] == Tileset.WALL &&
                         map[i + 1][j] != Tileset.WALL && map[i][j + 1] != Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
                 if (map[i - 1][j] != Tileset.WALL && map[i][j - 1] == Tileset.WALL &&
                         map[i + 1][j] == Tileset.WALL && map[i][j + 1] != Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
                 if (map[i - 1][j] != Tileset.WALL && map[i][j - 1] != Tileset.WALL &&
                         map[i + 1][j] == Tileset.WALL && map[i][j + 1] == Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
                 if (map[i - 1][j] == Tileset.WALL && map[i][j - 1] != Tileset.WALL &&
                         map[i + 1][j] != Tileset.WALL && map[i][j + 1] == Tileset.WALL &&
-                        map[i + 1][j + 1] ==Tileset.NOTHING || map[i - 1][j + 1] ==Tileset.NOTHING ||
-                        map[i + 1][j - 1] ==Tileset.NOTHING || map[i - 1][j - 1] ==Tileset.NOTHING)
+                        map[i + 1][j + 1] == Tileset.NOTHING || map[i - 1][j + 1] == Tileset.NOTHING ||
+                        map[i + 1][j - 1] == Tileset.NOTHING || map[i - 1][j - 1] == Tileset.NOTHING)
                     map[i][j] = Tileset.FLOWER;
             }
         }
         for (int i = 0; i < WIDTH - 1; i++) {
             for (int j = 0; j < HEIGHT - 1; j++) {
-                if (map[i][j] == Tileset.FLOWER) map[i][j] = Tileset.WALL;
+                if (map[i][j] == Tileset.FLOWER) {map[i][j] = Tileset.WALL;}
             }
         }
     }
