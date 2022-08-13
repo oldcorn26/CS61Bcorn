@@ -15,7 +15,7 @@ public class Game {
     public static final int HEIGHT = 30;
     private static final int ROOM_NUMBER = 15;
     private static Random RANDOM;
-    private static TETile[][] map = new TETile[WIDTH][HEIGHT];
+    private TETile[][] map = new TETile[WIDTH][HEIGHT];
     private static boolean playerTurn;
     private static boolean readSave;
 
