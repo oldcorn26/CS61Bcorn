@@ -21,9 +21,9 @@ public class PercolationStats {
 
         times = T;
         fractions = new double[T];
-        Percolation p = pf.make(N);
         int sitesNumber = N * N;
         for (int i = 0; i < T; i++) {
+            Percolation p = pf.make(N);
             while (!p.percolates()) {
                 p.open(StdRandom.uniform(N), StdRandom.uniform(N));
             }
@@ -35,7 +35,7 @@ public class PercolationStats {
      * Sample mean of percolation threshold
      * @return the mean of experiment.
      */
-    public double mean(){
+    public double mean() {
         return StdStats.mean(fractions);
     }
 
@@ -43,7 +43,7 @@ public class PercolationStats {
      * Sample standard deviation of percolation threshold
      * @return the sample standard deviation of percolation threshold
      */
-    public double stddev(){
+    public double stddev() {
         return StdStats.stddev(fractions);
     }
 
@@ -51,7 +51,7 @@ public class PercolationStats {
      * Calculate low endpoint of 95% confidence interval
      * @return the low endpoint of 95% confidence interval
      */
-    public double confidenceLow(){
+    public double confidenceLow() {
         return mean() - 1.96 * stddev() / Math.sqrt(times);
     }
 
@@ -59,7 +59,7 @@ public class PercolationStats {
      * Calculate high endpoint of 95% confidence interval
      * @return the high endpoint of 95% confidence interval
      */
-    public double confidenceHigh(){
+    public double confidenceHigh() {
         return mean() + 1.96 * stddev() / Math.sqrt(times);
     }
 }
