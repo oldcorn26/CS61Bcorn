@@ -41,7 +41,7 @@ public class Percolation {
         if (row < 0 || col < 0 || row > width - 1 || col > width - 1) {
             throw new IndexOutOfBoundsException("It's outside its prescribed range");
         }
-        if (flag[index]) return;
+        if (flag[index]) {return;}
 
         flag[index] = true;
         if (col < width - 1 && flag[index + 1]) {
