@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
     private boolean[] flag;
     private int openNumber;
-    private static int width;
+    private int width;
     private WeightedQuickUnionUF sites, sitesPer;
 
     /**
@@ -41,6 +41,7 @@ public class Percolation {
         if (row < 0 || col < 0 || row > width - 1 || col > width - 1) {
             throw new IndexOutOfBoundsException("It's outside its prescribed range");
         }
+        if (flag[index]) return;
 
         flag[index] = true;
         if (col < width - 1 && flag[index + 1]) {
@@ -65,7 +66,6 @@ public class Percolation {
                 sitesPer.union(index, index - 1);
             }
         }
-
         openNumber++;
     }
 
@@ -110,19 +110,23 @@ public class Percolation {
      * @return true if it is percolated.
      */
     public boolean percolates() {
-        int num  = width * width;
-        return sitesPer.connected(num, num + 1);
+        if (width == 1) {
+            return flag[0];
+        } else {
+            int num  = width * width;
+            return sitesPer.connected(num, num + 1);
+        }
     }
     public static void main(String[] args) {
-        Percolation p = new Percolation(3);
-        p.open(0,0);
-        p.open(1,0);
+        Percolation p = new Percolation(1);
+        p.open(0, 0);
+//        p.open(1, 0);
 //        p.open(2,0);
-        p.open(1,2);
-        p.open(2,2);
-        System.out.println(p.numberOfOpenSites());
-        System.out.println(p.isOpen(1, 0));
-        p.isFull(1, 0);
-        System.out.println(p.isFull(1, 0));
+//        p.open(1, 2);
+//        p.open(2, 2);
+        p.percolates();
+        System.out.println(p.percolates());
+//        System.out.println(p.isOpen(1, 0));
+//        System.out.println(p.isFull(1, 0));
     }
 }

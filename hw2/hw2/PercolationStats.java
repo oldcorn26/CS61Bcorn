@@ -6,7 +6,7 @@ import edu.princeton.cs.introcs.StdStats;
 
 public class PercolationStats {
     private double[] fractions;
-    private static int times;
+    private int times;
 
     /**
      * Perform T independent experiments on an N-by-N grid
