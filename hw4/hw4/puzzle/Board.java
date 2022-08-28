@@ -147,4 +147,9 @@ public class Board implements WorldState{
         return s.toString();
     }
 
+    @Override
+    public int hashCode() {
+        return tile != null ? tile.hashCode() : 0;
+    }
+
 }
