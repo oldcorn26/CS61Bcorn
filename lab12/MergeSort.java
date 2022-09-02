@@ -75,6 +75,7 @@ public class MergeSort {
             temp = mergeSortedQueues(result.dequeue(), result.dequeue());
             result.enqueue(temp);
         }
+        if (result.isEmpty()) return items;
         return result.dequeue();
     }
 
