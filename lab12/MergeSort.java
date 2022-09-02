@@ -34,8 +34,13 @@ public class MergeSort {
     /** Returns a queue of queues that each contain one item from items. */
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
-        // Your code here!
-        return null;
+        Queue<Queue<Item>> temp = new Queue<>();
+        while (!items.isEmpty()) {
+            Queue<Item> flag = new Queue<>();
+            flag.enqueue(items.dequeue());
+            temp.enqueue(flag);
+        }
+        return temp;
     }
 
     /**
@@ -53,14 +58,43 @@ public class MergeSort {
      */
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
-        // Your code here!
-        return null;
+        Queue<Item> result = new Queue<>();
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+            result.enqueue(getMin(q1, q2));
+        }
+        return result;
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
-        // Your code here!
-        return items;
+        Queue<Item> temp;
+        Queue<Queue<Item>> result = makeSingleItemQueues(items);
+
+        while (result.size() > 1) {
+            temp = mergeSortedQueues(result.dequeue(), result.dequeue());
+            result.enqueue(temp);
+        }
+        return result.dequeue();
+    }
+
+    public static void main(String[] args) {
+        Queue<String> students = new Queue<String>();
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        students.enqueue("Band");
+        students.enqueue(("Zoo"));
+        students.enqueue("Bank");
+        System.out.print("The previous queue: ");
+        for (String s : students) {
+            System.out.print(s + " ");
+        }
+
+        System.out.print("\nThe  sorted  queue: ");
+        Queue<String> temp = mergeSort(students);
+        for (String s : temp) {
+            System.out.print(s + " ");
+        }
     }
 }
