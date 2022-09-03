@@ -16,8 +16,18 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        // TODO: Implement LSD Sort
-        return null;
+        int width = 0;
+        String[] copy = new String[asciis.length];
+        System.arraycopy(asciis, 0, copy, 0, asciis.length);
+
+        for (String s : copy) {
+            width = Math.max(width, s.length());
+        }
+
+        for (int i = width - 1; i >= 0; i--) {
+            sortHelperLSD(copy, i);
+        }
+        return copy;
     }
 
     /**
@@ -27,8 +37,38 @@ public class RadixSort {
      * @param index The position to sort the Strings on.
      */
     private static void sortHelperLSD(String[] asciis, int index) {
-        // Optional LSD helper method for required LSD radix sort
-        return;
+        int[] flag = new int[257];
+        String[] temp = new String[asciis.length];
+        System.arraycopy(asciis, 0, temp, 0, asciis.length);
+
+        for (String s : asciis) {
+            if (s.length() > index) {
+                flag[(int) s.charAt(index) + 1]++;
+            } else {
+                flag[0]++;
+            }
+        }
+
+        // Handle the counter.
+        for (int i = 0; i < 257; i ++) {
+            if (i == 0) {
+                flag[0]--;
+            } else {
+                flag[i] = flag[i - 1] + flag[i];
+            }
+        }
+
+        for (int i = asciis.length - 1; i >= 0; i--) {
+            if (asciis[i].length() > index) {
+                int pos = (int) asciis[i].charAt(index) + 1;
+                temp[flag[pos]] = asciis[i];
+                flag[pos]--;
+            } else {
+                temp[flag[0]] = asciis[i];
+                flag[0]--;
+            }
+        }
+        System.arraycopy(temp, 0, asciis, 0, temp.length);
     }
 
     /**
@@ -45,4 +85,25 @@ public class RadixSort {
         // Optional MSD helper method for optional MSD radix sort
         return;
     }
+
+//    public static void main(String[] args) {
+//        String[] origin = new String[5];
+//        String[] sorted;
+//        origin[0] = "b";
+//        origin[1] = "c";
+//        origin[2] = "a";
+//        origin[3] = "cc";
+//        origin[4] = "aa";
+//
+//        sorted = RadixSort.sort(origin);
+//        for (String s : origin) {
+//            System.out.print(s + " ");
+//        }
+//
+//        System.out.print("\n");
+//
+//        for (String s : sorted) {
+//            System.out.print(s + " ");
+//        }
+//    }
 }
